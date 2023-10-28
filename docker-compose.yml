@@ -2,6 +2,7 @@ version: '3'
 
 services:
   db:
+    container_name: mysql
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: admin
@@ -10,6 +11,7 @@ services:
       - "3306:3306"
 
   pma:
+    container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin
     environment:
       PMA_HOST: db
@@ -19,4 +21,41 @@ services:
       - "8080:80"
     depends_on:
       - db
+
+  cms:
+    build: ./cms
+    container_name: cms
+    command: npm run develop
+    ports:
+      - 1337:1337
+    volumes:
+      - ./cms:/usr/src/cms
+      - /usr/src/cms/node_modules
+    depends_on:
+      - db
+
+  backend:
+    build: ./backend
+    container_name: backend
+    command: npm run start:dev
+    ports:
+      - 3001:3001
+    volumes:
+      - ./backend:/usr/src/backend
+      - /usr/src/backend/node_modules
+    depends_on:
+      - cms
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    command: npm run dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/usr/src/frontend
+      - /usr/src/frontend/node_modules
+    depends_on:
+      - backend
+
 
