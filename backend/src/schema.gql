@@ -6,6 +6,33 @@ type HealthCheck {
   status: Boolean!
 }
 
+type User {
+  id: Float!
+  username: String!
+  email: String!
+  provider: String!
+  confirmed: Boolean!
+  blocked: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type RegisterUser {
+  jwt: String!
+  user: User!
+}
+
 type Query {
   read: HealthCheck!
+  userMe(jwt: String!): User!
+}
+
+type Mutation {
+  register(registerUser: InputRegisterUser!): RegisterUser!
+}
+
+input InputRegisterUser {
+  username: String!
+  email: String!
+  password: String!
 }

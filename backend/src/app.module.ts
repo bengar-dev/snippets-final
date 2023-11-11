@@ -1,18 +1,23 @@
-import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
 import { join } from 'path';
-import { HealthCheckResolver } from './healthCheck/health-check.resolver';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+
 import { HealthCheckModule } from './healthCheck/health-check.module';
+import { StrapiModule } from './strapi/strapi.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+    }),
     HealthCheckModule,
+    StrapiModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
   ],
-  providers: [HealthCheckResolver],
 })
 export class AppModule {}
