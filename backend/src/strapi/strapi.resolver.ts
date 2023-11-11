@@ -1,17 +1,22 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StrapiService } from './strapi.service';
-import { InputRegisterUser } from './dto/register-user.dto';
-import { RegisterUser, User } from './models/user.model';
+import { InputRegisterUser, InputSignUser } from './dto/auth-user.dto';
+import { AuthUser, User } from './models/user.model';
 
 @Resolver()
 export class StrapiResolver {
   constructor(private readonly strapiService: StrapiService) {}
 
-  @Mutation(() => RegisterUser)
+  @Mutation(() => AuthUser)
   async register(
     @Args('registerUser') registerUser: InputRegisterUser,
-  ): Promise<RegisterUser> {
+  ): Promise<AuthUser> {
     return this.strapiService.register(registerUser);
+  }
+
+  @Mutation(() => AuthUser)
+  async signIn(@Args('signUser') signUser: InputSignUser): Promise<AuthUser> {
+    return this.strapiService.signIn(signUser);
   }
 
   @Query(() => User)

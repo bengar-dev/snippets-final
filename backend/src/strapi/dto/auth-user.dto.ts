@@ -11,3 +11,12 @@ export class InputRegisterUser {
   @Field()
   password: string;
 }
+
+@InputType()
+export class InputSignUser {
+  @Field()
+  identifier: string;
+
+  @Field()
+  password: string;
+}

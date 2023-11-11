@@ -27,7 +27,7 @@ export class User {
 }
 
 @ObjectType()
-export class RegisterUser {
+export class AuthUser {
   @Field()
   jwt: string;
 

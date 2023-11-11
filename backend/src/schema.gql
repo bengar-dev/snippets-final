@@ -17,7 +17,7 @@ type User {
   updatedAt: String!
 }
 
-type RegisterUser {
+type AuthUser {
   jwt: String!
   user: User!
 }
@@ -28,11 +28,17 @@ type Query {
 }
 
 type Mutation {
-  register(registerUser: InputRegisterUser!): RegisterUser!
+  register(registerUser: InputRegisterUser!): AuthUser!
+  signIn(signUser: InputSignUser!): AuthUser!
 }
 
 input InputRegisterUser {
   username: String!
   email: String!
+  password: String!
+}
+
+input InputSignUser {
+  identifier: String!
   password: String!
 }
