@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Open Sans', 'sans-serif';
+}
+
+.bg-primary {
+  background: #100f31;
+}
+
+.bg-secondary {
+  background: #8c52ff;
+}
+
+.text-primary {
+  color: #100f31;
+}
+
+.text-secondary {
+  color: #8c52ff;
+}
+
+.border-primary {
+  border-color: #100f31;
+}
+
+.border-secondary {
+  border-color: #8c52ff;
+}
