@@ -1,0 +1,5 @@
+query read {
+    read {
+        status
+    }
+}

@@ -1,0 +1,12 @@
+mutation signIn($signUser: InputSignUser!) {
+    signIn(signUser: $signUser) {
+        jwt
+        user {
+            id
+            username
+            email
+            confirmed
+            createdAt
+        }
+    }
+}

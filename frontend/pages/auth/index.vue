@@ -9,17 +9,25 @@
     </div>
     <div class="w-full md:w-2/3 lg:w-2/3 xl:w-1/3">
       <MainBlock col class="py-12 px-6">
-        <form
-          class="flex flex-col gap-4"
-          @submit="
-            (e) => {
-              e.preventDefault();
-              console.log('hello world', form);
-            }
-          "
-        >
-          <InputValue id="identifier-input" type="text" placeholder="email / username" v-model="form.identifier" />
-          <InputValue id="password-input" type="password" placeholder="password" v-model="form.password" />
+        <FormKit type="form" id="sign-in-form" class="flex flex-col gap-4" :actions="false" @submit="handleSubmit">
+          <FormKit
+            id="identifier-input"
+            label="Email / username"
+            type="text"
+            placeholder="email / username"
+            v-model="form.identifier"
+            validation="required"
+            wrapper-class="min-w-full"
+          />
+          <FormKit
+            id="password-input"
+            label="Password"
+            type="password"
+            placeholder="password"
+            v-model="form.password"
+            validation="required"
+            wrapper-class="min-w-full"
+          />
           <div class="flex w-full justify-between">
             <div class="flex items-center space-x-2 text-sm">
               <p class="w-fit">No account ?</p>
@@ -27,7 +35,7 @@
             </div>
             <Button type="submit" value="Sign in" variant="secondary" />
           </div>
-        </form>
+        </FormKit>
       </MainBlock>
 
       <Separator value="Or" class="my-12" />
@@ -38,19 +46,22 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import MainBlock from '~/components/blocks/MainBlock.vue';
-import InputValue from '~/components/inputs/InputValue.vue';
 import Button from '~/components/buttons/Button.vue';
 import Separator from '~/components/ui/Separator.vue';
+import { useUtility } from '~/composable/useUtility';
 
-interface FormProps {
-  identifier: string;
-  password: string;
-}
+const GqlInstance = useGql();
 
-const form = ref<FormProps>({
+const form = ref({
   identifier: '',
   password: '',
 });
+
+const handleSubmit = async () => {
+  const { signIn } = await GqlInstance('signIn', { signUser: form.value });
+  //TODO: handle signin jwt
+};
 </script>

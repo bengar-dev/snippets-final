@@ -9,23 +9,48 @@
     </div>
     <div class="w-full md:w-2/3 lg:w-2/3 xl:w-1/3">
       <MainBlock col class="py-12 px-6">
-        <form
-          class="flex flex-col gap-4"
-          @submit="
-            (e) => {
-              e.preventDefault();
-              console.log('hello world', form);
-            }
-          "
-        >
-          <InputValue id="username-input" type="text" placeholder="username" v-model="form.username" />
-          <InputValue id="email-input" type="email" placeholder="email" v-model="form.email" />
-          <InputValue id="password-input" type="password" placeholder="password" v-model="form.password" />
-          <InputValue
-            id="passwordConfirm-input"
+        <FormKit type="form" class="w-full flex flex-col" :actions="false" @submit="handleSubmit">
+          <FormKit
+            id="username-input"
+            label="Username"
+            type="text"
+            placeholder="username"
+            v-model="form.username"
+            validation="required"
+            wrapper-class="min-w-full"
+          />
+          <FormKit
+            id="email-input"
+            label="Email"
+            type="email"
+            placeholder="email"
+            v-model="form.email"
+            validation="required|email"
+            wrapper-class="min-w-full"
+          />
+          <FormKit
+            id="password-input"
+            label="Password"
+            type="password"
+            placeholder="password"
+            v-model="form.password"
+            validation="required|length:5,16"
+            wrapper-class="min-w-full"
+          />
+          <FormKit
+            id="confirmPassword-input"
+            label="Confirm password"
             type="password"
             placeholder="confirm password"
             v-model="form.confirmPassword"
+            validation="required|length:5,16|confirmPassword"
+            :validation-rules="{
+              confirmPassword: validateConfirmPassword,
+            }"
+            :validation-messages="{
+              confirmPassword: 'Passwords doesn\'t match',
+            }"
+            wrapper-class="min-w-full"
           />
           <div class="flex w-full justify-between">
             <div class="flex items-center space-x-2 text-sm">
@@ -34,27 +59,35 @@
             </div>
             <Button type="submit" value="Sign up" variant="secondary" />
           </div>
-        </form>
+        </FormKit>
       </MainBlock>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import MainBlock from '~/components/blocks/MainBlock.vue';
-import InputValue from '~/components/inputs/InputValue.vue';
 import Button from '~/components/buttons/Button.vue';
 
-interface FormProps {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+const GqlInstance = useGql();
 
-const form = ref<FormProps>({
+const form = ref({
   username: '',
   email: '',
   password: '',
   confirmPassword: '',
 });
+
+const validateConfirmPassword = (pass: any) => pass.value === form.value.password;
+
+const handleSubmit = async () => {
+  const parsedForm = {
+    username: form.value.username,
+    email: form.value.email,
+    password: form.value.password,
+  };
+
+  const { register } = await GqlInstance('register', {
+    registerUser: parsedForm,
+  });
+};
 </script>

@@ -25,6 +25,8 @@ type AuthUser {
 type Query {
   read: HealthCheck!
   userMe(jwt: String!): User!
+  users: [User!]!
+  user(id: Float!): User!
 }
 
 type Mutation {

@@ -1,0 +1,12 @@
+mutation register($registerUser: InputRegisterUser!) {
+    register(registerUser: $registerUser) {
+        jwt
+        user {
+            username
+            email
+            id
+            confirmed
+            createdAt
+        }
+    }
+}
