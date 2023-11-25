@@ -1,11 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { MetaPagination } from 'src/strapi/models/strapi.common.model';
-
-@ObjectType()
-export class StrapiFile {
-  @Field()
-  id: number;
-}
+import {
+  MetaPagination,
+  MetaStrapiResponse,
+  StrapiFile,
+} from 'src/strapi/models/strapi.common.model';
 
 @ObjectType()
 export class HealthCheck {
@@ -24,6 +22,6 @@ export class HealthCheckCollection {
   @Field(() => [HealthCheck])
   data: Array<HealthCheck>;
 
-  @Field(() => MetaPagination)
-  meta: MetaPagination;
+  @Field(() => MetaStrapiResponse)
+  meta: MetaStrapiResponse;
 }

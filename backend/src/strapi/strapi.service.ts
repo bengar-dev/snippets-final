@@ -5,7 +5,7 @@ import { InputRegisterUser, InputSignUser } from './dto/auth-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, Observable } from 'rxjs';
-import { StrapiResponse } from './models/strapi.common.model';
+import { ApiOptionInput, StrapiResponse } from './models/strapi.common.model';
 
 @Injectable()
 export class StrapiService {
@@ -114,8 +114,18 @@ export class StrapiService {
     return newObject;
   }
 
-  private buildApiOptions(apiOption?: object): string {
-    return '?populate=deep,5';
+  private buildApiOptions(apiOption?: ApiOptionInput): string {
+    let queryString: string = '?populate=deep,5';
+
+    if (!apiOption) {
+      return queryString;
+    }
+
+    if (apiOption.populateValue) {
+      queryString = `populate=deep,${apiOption.populateValue}`;
+    }
+
+    return queryString;
   }
 
   private async renderStrapiData<T>(

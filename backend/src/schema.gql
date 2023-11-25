@@ -2,15 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type MetaPagination {
-  page: Float!
-  pageSize: Float!
-  pageCount: Float!
-  total: Float!
-}
-
 type StrapiFile {
   id: Float!
+  name: String
+  alternativeText: String
+  url: String!
+  size: Float!
+}
+
+type MetaPagination {
+  page: Float
+  pageSize: Float
+  pageCount: Float
+  total: Float
+}
+
+type MetaStrapiResponse {
+  pagination: MetaPagination!
 }
 
 type HealthCheck {
@@ -21,7 +29,7 @@ type HealthCheck {
 
 type HealthCheckCollection {
   data: [HealthCheck!]!
-  meta: MetaPagination!
+  meta: MetaStrapiResponse!
 }
 
 type User {
