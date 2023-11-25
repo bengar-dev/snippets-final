@@ -7,10 +7,15 @@ export class UsersService {
   constructor(private readonly strapiService: StrapiService) {}
 
   async users(): Promise<Array<User>> {
-    return this.strapiService.getEntriesCollection<User>('users');
+    return (await this.strapiService.getEntriesCollection(
+      'users',
+    )) as any as Array<User>;
   }
 
   async user(id: number): Promise<User> {
-    return this.strapiService.getEntryCollection<User>('users', id);
+    return (await this.strapiService.getEntryCollection(
+      'users',
+      id,
+    )) as any as User;
   }
 }

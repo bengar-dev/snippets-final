@@ -2,8 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type MetaPagination {
+  page: Float!
+  pageSize: Float!
+  pageCount: Float!
+  total: Float!
+}
+
+type StrapiFile {
+  id: Float!
+}
+
 type HealthCheck {
+  title: String!
   status: Boolean!
+  image: StrapiFile
+}
+
+type HealthCheckCollection {
+  data: [HealthCheck!]!
+  meta: MetaPagination!
 }
 
 type User {
@@ -23,7 +41,7 @@ type AuthUser {
 }
 
 type Query {
-  read: HealthCheck!
+  healthChecks: HealthCheckCollection!
   userMe(jwt: String!): User!
   users: [User!]!
   user(id: Float!): User!

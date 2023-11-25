@@ -5,6 +5,7 @@ import { InputRegisterUser, InputSignUser } from './dto/auth-user.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, Observable } from 'rxjs';
+import { StrapiResponse } from './models/strapi.common.model';
 
 @Injectable()
 export class StrapiService {
@@ -44,23 +45,77 @@ export class StrapiService {
     return this.renderStrapiData<User>(observable);
   }
 
-  async getEntriesCollection<T>(collection: string): Promise<Array<T>> {
-    const observable = this.httpService.get<Array<T>>(
-      `${this.configService.get('STRAPI_API')}/${collection}`,
+  async getEntriesCollection(collection: string): Promise<StrapiResponse> {
+    const query = this.buildApiOptions();
+
+    const observable = this.httpService.get(
+      `${this.configService.get('STRAPI_API')}/${collection}${query}`,
     );
 
     return this.renderStrapiData(observable);
   }
 
-  async getEntryCollection<T>(
+  async getEntryCollection(
     collection: string,
     id: number | string,
-  ): Promise<T> {
-    const observable = this.httpService.get<T>(
-      `${this.configService.get('STRAPI_API')}/${collection}/${id}`,
+  ): Promise<StrapiResponse> {
+    const query = this.buildApiOptions();
+
+    const observable = this.httpService.get(
+      `${this.configService.get('STRAPI_API')}/${collection}/${id}${query}`,
     );
 
     return this.renderStrapiData(observable);
+  }
+
+  public formatDeepCollection<T>(strapiResponse: StrapiResponse): T {
+    if (Array.isArray(strapiResponse.data)) {
+      return {
+        data: strapiResponse.data.map((el: object) =>
+          this.formatDeepSingleData(el),
+        ),
+        meta: strapiResponse.meta,
+      } as T;
+    }
+  }
+
+  public formatDeepSingleData(data: object): object {
+    let newObject = {};
+    if (!data) {
+      return null;
+    }
+
+    if (typeof data === 'object') {
+      const keysArray = Object.keys(data) || [];
+
+      for (const key of keysArray) {
+        if (key !== 'attributes' && key !== 'data') {
+          newObject = {
+            ...newObject,
+            [key]: this.formatDeepSingleData(data[key]),
+          };
+        } else if (
+          (key === 'attributes' || key === 'data') &&
+          data[key] &&
+          Object.keys(data[key]).length > 0
+        ) {
+          newObject = {
+            ...newObject,
+            ...this.formatDeepSingleData(data[key]),
+          };
+        } else {
+          return null;
+        }
+      }
+    } else {
+      return data;
+    }
+
+    return newObject;
+  }
+
+  private buildApiOptions(apiOption?: object): string {
+    return '?populate=deep,5';
   }
 
   private async renderStrapiData<T>(

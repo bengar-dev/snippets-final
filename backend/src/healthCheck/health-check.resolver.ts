@@ -1,15 +1,16 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { HealthCheck } from './models/health-check.model';
+import {
+  HealthCheck,
+  HealthCheckCollection,
+} from './models/health-check.model';
+import { HealthCheckService } from './health-check.service';
 
 @Resolver()
 export class HealthCheckResolver {
-  constructor() {}
+  constructor(private readonly healthCheckService: HealthCheckService) {}
 
-  @Query(() => HealthCheck)
-  read(): HealthCheck {
-    console.log('hello world :)');
-    return {
-      status: true,
-    };
+  @Query(() => HealthCheckCollection)
+  healthChecks() {
+    return this.healthCheckService.healthChecks();
   }
 }
