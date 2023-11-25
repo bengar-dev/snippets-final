@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "github_users",
+  "info": {
+    "singularName": "github-user",
+    "pluralName": "github-users",
+    "displayName": "GithubUser",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "githubId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "profileUrl": {
+      "type": "string",
+      "required": true
+    },
+    "avatarUrl": {
+      "type": "string"
+    },
+    "accessToken": {
+      "type": "text"
+    },
+    "refreshToken": {
+      "type": "text"
+    }
+  }
+}

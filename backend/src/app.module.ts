@@ -7,6 +7,7 @@ import { HealthCheckModule } from './healthCheck/health-check.module';
 import { StrapiModule } from './strapi/strapi.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UsersModule } from './users/users.module';
     HealthCheckModule,
     StrapiModule,
     UsersModule,
+    AuthModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),

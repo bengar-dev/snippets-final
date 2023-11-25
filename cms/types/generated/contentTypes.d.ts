@@ -362,6 +362,43 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiGithubUserGithubUser extends Schema.CollectionType {
+  collectionName: 'github_users';
+  info: {
+    singularName: 'github-user';
+    pluralName: 'github-users';
+    displayName: 'GithubUser';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    githubId: Attribute.String & Attribute.Required & Attribute.Unique;
+    displayName: Attribute.String;
+    username: Attribute.String & Attribute.Required & Attribute.Unique;
+    profileUrl: Attribute.String & Attribute.Required;
+    avatarUrl: Attribute.String;
+    accessToken: Attribute.Text;
+    refreshToken: Attribute.Text;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::github-user.github-user',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::github-user.github-user',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiHealthCheckHealthCheck extends Schema.CollectionType {
   collectionName: 'health_checks';
   info: {
@@ -663,7 +700,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -719,6 +755,7 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::github-user.github-user': ApiGithubUserGithubUser;
       'api::health-check.health-check': ApiHealthCheckHealthCheck;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;

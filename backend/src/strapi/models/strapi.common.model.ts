@@ -13,6 +13,10 @@ export interface StrapiResponse {
 }
 
 export interface ApiOptionInput {
+  where?: {
+    fieldName: string;
+    value: string;
+  };
   populateValue?: string;
 }
 

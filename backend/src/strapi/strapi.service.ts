@@ -45,8 +45,11 @@ export class StrapiService {
     return this.renderStrapiData<User>(observable);
   }
 
-  async getEntriesCollection(collection: string): Promise<StrapiResponse> {
-    const query = this.buildApiOptions();
+  async getEntriesCollection(
+    collection: string,
+    apiOptions?: ApiOptionInput,
+  ): Promise<StrapiResponse> {
+    const query = this.buildApiOptions(apiOptions);
 
     const observable = this.httpService.get(
       `${this.configService.get('STRAPI_API')}/${collection}${query}`,
@@ -63,6 +66,35 @@ export class StrapiService {
 
     const observable = this.httpService.get(
       `${this.configService.get('STRAPI_API')}/${collection}/${id}${query}`,
+    );
+
+    return this.renderStrapiData(observable);
+  }
+
+  async createEntryCollection(
+    collection: string,
+    data: object,
+  ): Promise<StrapiResponse> {
+    const observable = this.httpService.post(
+      `${this.configService.get('STRAPI_API')}/${collection}`,
+      {
+        data,
+      },
+    );
+
+    return this.renderStrapiData(observable);
+  }
+
+  async updateEntryCollection(
+    collection: string,
+    strapiId: number,
+    data: object,
+  ): Promise<StrapiResponse> {
+    const observable = this.httpService.put(
+      `${this.configService.get('STRAPI_API')}/${collection}/${strapiId}`,
+      {
+        data,
+      },
     );
 
     return this.renderStrapiData(observable);
@@ -123,6 +155,10 @@ export class StrapiService {
 
     if (apiOption.populateValue) {
       queryString = `populate=deep,${apiOption.populateValue}`;
+    }
+
+    if (apiOption.where) {
+      queryString = `?filters[${apiOption.where.fieldName}][$eq]=${apiOption.where.value}`;
     }
 
     return queryString;
