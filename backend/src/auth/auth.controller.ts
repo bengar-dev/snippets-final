@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import { GithubUser, GithubUserResponse } from './models/github.model';
+import { startWith } from 'rxjs';
 
 @Controller()
 export class AuthController {
@@ -32,5 +33,22 @@ export class AuthController {
 
     res.cookie('jwt', jwt);
     res.redirect(this.configService.get('FRONTEND_ENDPOINT'));
+  }
+
+  @Get('userMe')
+  async userMe(@Req() req, @Res() res): Promise<boolean> {
+    const { jwt } = req.cookies;
+    if (jwt) {
+      try {
+        const decodeToken = await this.jwtService.verifyAsync(jwt);
+        //do things if we decode it
+        return res.status(200).json(true);
+      } catch (err: any) {
+        res.clearCookie('jwt');
+        return res.status(401).json(false);
+      }
+    }
+
+    return res.status(401).json(false);
   }
 }
