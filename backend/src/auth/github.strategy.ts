@@ -27,13 +27,13 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
     const githubUser = await this.authService.getGithubUser(profile.id);
 
     if (githubUser) {
-      await this.authService.updateGithubUser(
+      const updatedGitHubUser = await this.authService.updateGithubUser(
         githubUser.id,
         profile,
         accessToken,
         refreshToken,
       );
-      return done(null, githubUser);
+      return done(null, updatedGitHubUser);
     }
 
     const creatingGithubUser = await this.authService.createGithubUser(

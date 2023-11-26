@@ -1,5 +1,0 @@
-query read {
-    read {
-        status
-    }
-}

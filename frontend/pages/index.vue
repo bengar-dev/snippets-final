@@ -1,6 +1,4 @@
-<script lang="ts" setup>
-console.log('setup');
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <div class="w-full min-h-screen bg-primary text-white">
